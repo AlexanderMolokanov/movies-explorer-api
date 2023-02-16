@@ -7,7 +7,8 @@ const cors = require('cors');
 const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3001, MONGO_ADDRESS = 'mongodb://localhost:27017/moviesdb' } = process.env;
+// const { PORT = 3001, MONGO_ADDRESS = 'mongodb://localhost:27017/moviesdb' } = process.env;
+const { PORT = 3000, NODE_ENV, MONGODB_ADDRESS } = process.env;
 
 const app = express();
 
@@ -34,7 +35,7 @@ mongoose.set("strictQuery", false);
   // });
 
   async function main() {
-    await mongoose.connect(NODE_ENV === 'production' ? MONGODB_ADDRESS : 'mongodb://localhost:27017/mestodb', {
+    await mongoose.connect(NODE_ENV === 'production' ? MONGODB_ADDRESS : 'mongodb://localhost:27017/moviesdb', {
       useNewUrlParser: true,
       // useCreateIndex: true,
       // useFindAndModify: false,
@@ -48,7 +49,7 @@ mongoose.set("strictQuery", false);
   }
 
   main();
-  
+
   app.use(requestLogger);
 
 app.use(require('./routes/index'));
