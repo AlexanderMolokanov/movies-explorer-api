@@ -25,14 +25,31 @@ app.use('*', cors({
 
 app.use(cookieParser());
 
-app.listen(PORT);
+// app.listen(PORT);
 app.use(express.json());
 
-mongoose.connect(`${MONGO_ADDRESS}`, {
-  useNewUrlParser: true,
-});
+mongoose.set("strictQuery", false);
+// mongoose.connect(`${MONGO_ADDRESS}`, {
+  //   useNewUrlParser: true,
+  // });
 
-app.use(requestLogger);
+  async function main() {
+    await mongoose.connect(NODE_ENV === 'production' ? MONGODB_ADDRESS : 'mongodb://localhost:27017/mestodb', {
+      useNewUrlParser: true,
+      // useCreateIndex: true,
+      // useFindAndModify: false,
+      useUnifiedTopology: true,
+    });
+    app.listen(PORT, (err) => {
+      if (!err) {
+        console.log(`порт слушает ${PORT}!`);
+      }
+    });
+  }
+
+  main();
+  
+  app.use(requestLogger);
 
 app.use(require('./routes/index'));
 
