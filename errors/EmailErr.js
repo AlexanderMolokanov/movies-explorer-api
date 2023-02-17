@@ -1,8 +1,8 @@
-class EmailError extends Error {
+class EmailErr extends Error {
   constructor(message) {
     super(message);
     this.statusCode = 409;
   }
 }
 
-module.exports = EmailError;
+module.exports = EmailErr;

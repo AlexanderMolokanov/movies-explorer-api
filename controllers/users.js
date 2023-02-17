@@ -5,15 +5,15 @@ const User = require('../models/user');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-const NotFoundError = require('../errors/NotFoundError');
-const DataError = require('../errors/DataError');
-const EmailError = require('../errors/EmailError');
-const AuthError = require('../errors/AuthError');
+const NotFoundErr = require('../errors/NotFoundErr');
+const DataErr = require('../errors/DataErr');
+const EmailErr = require('../errors/EmailErr');
+const AuthErr = require('../errors/AuthErr');
 
 const getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(() => {
-      throw new NotFoundError('Пользователь с таким id не найден');
+      throw new NotFoundErr('Пользователь с таким id не найден');
     })
     .then((user) => res.status(200).send(user))
     .catch(next);
@@ -25,16 +25,16 @@ const updateUserInfo = (req, res, next) => {
   User.findOne({ email })
     .then((response) => {
       if (response) {
-        throw new EmailError('Пользователь с таким email уже существует');
+        throw new EmailErr('Пользователь с таким email уже существует');
       }
       User.findByIdAndUpdate(req.user._id, { email, name }, { runValidators: true, new: true })
         .orFail(() => {
-          throw new NotFoundError('Пользователь не найден');
+          throw new NotFoundErr('Пользователь не найден');
         })
         .then((user) => res.status(200).send(user))
         .catch((err) => {
           if (err.name === 'ValidationError') {
-            next(new DataError('Переданы некорректные данные'));
+            next(new DataErr('Переданы некорректные данные'));
           } else {
             next(err);
           }
@@ -53,7 +53,7 @@ const createUser = (req, res, next) => {
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        throw new EmailError('Пользователь с таким email уже существует');
+        throw new EmailErr('Пользователь с таким email уже существует');
       }
       return bcrypt.hash(password, 10)
         .then((hash) => User.create({
@@ -79,7 +79,7 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.statusCode === 400) {
-        next(new DataError('Переданы некорректные данные'));
+        next(new DataErr('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -93,12 +93,12 @@ const login = (req, res, next) => {
     .select('+password')
     .then((user) => {
       if (!user) {
-        throw new AuthError('Неверный логин или пароль');
+        throw new AuthErr('Неверный логин или пароль');
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new AuthError('Неверный логин или пароль');
+            throw new AuthErr('Неверный логин или пароль');
           }
           const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
           res

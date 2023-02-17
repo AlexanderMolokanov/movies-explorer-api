@@ -1,8 +1,8 @@
-class RightsError extends Error {
+class RightsErr extends Error {
   constructor(message) {
     super(message);
     this.statusCode = 403;
   }
 }
 
-module.exports = RightsError;
+module.exports = RightsErr;

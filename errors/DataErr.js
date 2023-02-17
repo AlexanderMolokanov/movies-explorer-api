@@ -1,8 +1,8 @@
-class DataError extends Error {
+class DataErr extends Error {
   constructor(message) {
     super(message);
     this.statusCode = 400;
   }
 }
 
-module.exports = DataError;
+module.exports = DataErr;

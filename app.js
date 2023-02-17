@@ -4,7 +4,7 @@ const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
-const NotFoundError = require('./errors/NotFoundError');
+const NotFoundErr = require('./errors/NotFoundErr');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 // const { PORT = 3001, MONGO_ADDRESS = 'mongodb://localhost:27017/moviesdb' } = process.env;
@@ -55,7 +55,7 @@ mongoose.set("strictQuery", false);
 app.use(require('./routes/index'));
 
 app.use((req, res, next) => {
-  next(new NotFoundError('Такой страницы не существует'));
+  next(new NotFoundErr('Такой страницы не существует'));
 });
 
 app.use(errorLogger);
