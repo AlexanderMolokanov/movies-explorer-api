@@ -5,7 +5,7 @@ const app = express();
 const cors = require('cors');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
-// const rateLimit = require('express-rate-limit');
+const rateLimit = require('express-rate-limit');
 // const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
@@ -13,7 +13,7 @@ const cookieParser = require('cookie-parser');
 const NotFoundErr = require('./errors/NotFoundErr');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-// const { PORT = 3001, MONGO_ADDRESS = 'mongodb://localhost:27017/moviesdb' } = process.env;
+// const { PORT = 3000, MONGO_ADDRESS = 'mongodb://localhost:27017/moviesdb' } = process.env;
 const { PORT = 3000, NODE_ENV, MONGODB_ADDRESS } = process.env;
 
 
@@ -29,9 +29,20 @@ app.use('*', cors({
   credentials: true,
 }));
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use(bodyParser.json());
+
 app.use(helmet());
 
 app.use(cookieParser());
+
+app.use(limiter);
 
 // app.listen(PORT);
 app.use(express.json());
