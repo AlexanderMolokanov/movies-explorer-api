@@ -1,8 +1,14 @@
+require('dotenv').config();
 const express = require('express');
+
+const app = express();
+const cors = require('cors');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
+// const rateLimit = require('express-rate-limit');
+// const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
-const cors = require('cors');
 
 const NotFoundErr = require('./errors/NotFoundErr');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -10,7 +16,6 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 // const { PORT = 3001, MONGO_ADDRESS = 'mongodb://localhost:27017/moviesdb' } = process.env;
 const { PORT = 3000, NODE_ENV, MONGODB_ADDRESS } = process.env;
 
-const app = express();
 
 app.use('*', cors({
   origin: [
@@ -23,6 +28,8 @@ app.use('*', cors({
   allowedHeaders: ['Content-Type', 'Origin', 'Referer', 'Accept', 'Authorization'],
   credentials: true,
 }));
+
+app.use(helmet());
 
 app.use(cookieParser());
 
