@@ -67,7 +67,7 @@ const createUser = (req, res, next) => {
             .cookie('jwt', token, {
               maxAge: 3600000 * 24 * 7,
               httpOnly: true,
-              // secure: true,
+              secure: true,
               sameSite: 'none',
             })
             .status(200).send({
@@ -105,7 +105,7 @@ const login = (req, res, next) => {
             .cookie('jwt', token, {
               maxAge: 3600000 * 24 * 7,
               httpOnly: true,
-              // secure: true,
+              secure: true,
               sameSite: 'none',
             })
             .status(200)
@@ -124,7 +124,7 @@ const logout = (req, res) => {
     .cookie('jwt', 'jwt.token.revoked', {
       httpOnly: true,
       sameSite: 'none',
-      // secure: true,
+      secure: true,
       maxAge: -1,
     })
     .send({ message: 'Сессия завершена' });

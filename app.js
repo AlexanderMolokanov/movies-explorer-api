@@ -6,7 +6,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 
@@ -39,12 +39,9 @@ const limiter = rateLimit({
 app.use(bodyParser.json());
 
 app.use(helmet());
-
 app.use(cookieParser());
-
 app.use(limiter);
 
-// app.listen(PORT);
 app.use(express.json());
 
 mongoose.set("strictQuery", false);
@@ -52,23 +49,21 @@ mongoose.set("strictQuery", false);
   //   useNewUrlParser: true,
   // });
 
-  async function main() {
-    await mongoose.connect(NODE_ENV === 'production' ? MONGODB_ADDRESS : 'mongodb://localhost:27017/moviesdb', {
-      useNewUrlParser: true,
-      // useCreateIndex: true,
-      // useFindAndModify: false,
-      useUnifiedTopology: true,
-    });
-    app.listen(PORT, (err) => {
-      if (!err) {
-        console.log(`порт слушает ${PORT}!`);
-      }
-    });
-  }
+async function main() {
+  await mongoose.connect(NODE_ENV === 'production' ? MONGODB_ADDRESS : 'mongodb://localhost:27017/moviesdb', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  app.listen(PORT, (err) => {
+    if (!err) {
+      console.log(`порт слушает ${PORT}!`);
+    }
+  });
+}
 
-  main();
+main();
 
-  app.use(requestLogger);
+app.use(requestLogger);
 
 app.use(require('./routes/index'));
 

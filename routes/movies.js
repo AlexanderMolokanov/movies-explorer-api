@@ -30,3 +30,4 @@ router.delete('/movies/:movieId', celebrate({
 }), deleteMovie);
 
 module.exports = router;
+  
