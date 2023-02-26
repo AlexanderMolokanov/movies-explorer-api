@@ -1,7 +1,9 @@
+const { ERROR_CODE_CONFLICT } = require('../utils/constants');
+
 class EmailErr extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = 409;
+    this.statusCode = ERROR_CODE_CONFLICT; // 409
   }
 }
 

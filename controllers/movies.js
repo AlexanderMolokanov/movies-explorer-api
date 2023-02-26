@@ -4,6 +4,12 @@ const NotFoundErr = require('../errors/NotFoundErr');
 const DataErr = require('../errors/DataErr');
 const RightsErr = require('../errors/RightsErr');
 
+const {
+  WRONG_DATA_MOVIE,
+  MOVIE_NOT_FOUND,
+  ACCESS_ERROR,
+} = require('../utils/constants');
+
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
     .then((movies) => res.status(200).send(movies))
@@ -17,7 +23,7 @@ const addMovie = (req, res, next) => {
     .then((movie) => res.status(200).send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new DataErr('Переданы некорректные данные'));
+        return next(new DataErr(WRONG_DATA_MOVIE));
       }
       return next(err);
     });
@@ -26,11 +32,11 @@ const addMovie = (req, res, next) => {
 const deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
     .orFail(() => {
-      throw new NotFoundErr('Фильм не найден');
+      throw new NotFoundErr(MOVIE_NOT_FOUND);
     })
     .then((movie) => {
       if (!movie.owner.equals(req.user._id)) {
-        return next(new RightsErr('Нельзя удалить фильм другого пользователя'));
+        return next(new RightsErr(ACCESS_ERROR));
       }
       return movie.remove()
         .then(() => res.status(200).send({ message: 'Карточка удалена' }));

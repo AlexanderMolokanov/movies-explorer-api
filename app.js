@@ -5,7 +5,7 @@ const app = express();
 const cors = require('cors');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
-const rateLimit = require('express-rate-limit');
+// const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
@@ -29,18 +29,14 @@ app.use('*', cors({
 }));
 
 app.use(bodyParser.json());
-
 app.use(helmet());
 app.use(cookieParser());
 app.use(errorLogger);
+app.use(requestLogger);
 app.use(limiter);
-
 app.use(express.json());
 
 mongoose.set("strictQuery", false);
-// mongoose.connect(`${MONGO_ADDRESS}`, {
-  //   useNewUrlParser: true,
-  // });
 
 async function main() {
   await mongoose.connect(NODE_ENV === 'production' ? MONGODB_ADDRESS : devDatabaseUrl, {
@@ -56,7 +52,6 @@ async function main() {
 
 main();
 
-app.use(requestLogger);
 app.use(require('./routes/index'));
 app.use(errors()); // обработчик ошибок celebrate
 app.use(errorHandler); // мидлвара централизованного обработчика ошибок
