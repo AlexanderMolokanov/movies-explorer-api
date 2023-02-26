@@ -19,6 +19,11 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:3000/signout
+Content-Type: application/json
+
+###
+
 POST http://localhost:3000/movies
 Content-Type: application/json
 

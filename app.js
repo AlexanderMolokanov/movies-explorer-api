@@ -9,11 +9,10 @@ const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
-
-const NotFoundErr = require('./errors/NotFoundErr');
+const errorHandler = require('./middlewares/error-handler');
+const { limiter, devDatabaseUrl } = require('./utils/config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-// const { PORT = 3000, MONGO_ADDRESS = 'mongodb://localhost:27017/moviesdb' } = process.env;
 const { PORT = 3000, NODE_ENV, MONGODB_ADDRESS } = process.env;
 
 
@@ -29,17 +28,11 @@ app.use('*', cors({
   credentials: true,
 }));
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
 app.use(bodyParser.json());
 
 app.use(helmet());
 app.use(cookieParser());
+app.use(errorLogger);
 app.use(limiter);
 
 app.use(express.json());
@@ -50,7 +43,7 @@ mongoose.set("strictQuery", false);
   // });
 
 async function main() {
-  await mongoose.connect(NODE_ENV === 'production' ? MONGODB_ADDRESS : 'mongodb://localhost:27017/moviesdb', {
+  await mongoose.connect(NODE_ENV === 'production' ? MONGODB_ADDRESS : devDatabaseUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
@@ -59,27 +52,17 @@ async function main() {
       console.log(`порт слушает ${PORT}!`);
     }
   });
-
-  
 }
 
 main();
 
 app.use(requestLogger);
-
 app.use(require('./routes/index'));
+app.use(errors()); // обработчик ошибок celebrate
+app.use(errorHandler); // мидлвара централизованного обработчика ошибок
 
-app.use((req, res, next) => {
-  next(new NotFoundErr('Такой страницы не существует'));
-});
 
-app.use(errorLogger);
-
-app.use(errors());
-
-app.use((err, req, res, next) => {
-  res
-    .status(err.statusCode || 500)
-    .send({ message: err.message });
-  next();
-});
+// файл .env , пример:
+// NODE_ENV = production
+// JWT_SECRET = 'a4768f7eb2a93f64b0dcbc8998e135d1b14bf747b52ba2a7aaf11a2fe34cb2b0'
+// MONGO_ADDRESS = 'mongodb://localhost:27017/bitfilmsdb'

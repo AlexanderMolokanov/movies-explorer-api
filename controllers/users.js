@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
+const { devJwtKey } = require('../utils/config');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const NotFoundErr = require('../errors/NotFoundErr');
@@ -62,14 +64,7 @@ const createUser = (req, res, next) => {
           password: hash,
         }))
         .then((newUser) => {
-          const token = jwt.sign({ _id: newUser._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
           res
-            .cookie('jwt', token, {
-              maxAge: 3600000 * 24 * 7,
-              httpOnly: true,
-              secure: true,
-              sameSite: 'none',
-            })
             .status(200).send({
               _id: newUser._id,
               email: newUser.email,
@@ -100,22 +95,26 @@ const login = (req, res, next) => {
           if (!matched) {
             throw new AuthErr('Неверный логин или пароль');
           }
-          const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
-          res
-            .cookie('jwt', token, {
+          const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : devJwtKey, { expiresIn: '7d' });
+          res.cookie('jwt', token, {
               maxAge: 3600000 * 24 * 7,
               httpOnly: true,
-              secure: true,
+              // secure: true,
               sameSite: 'none',
             })
-            .status(200)
-            .send({
+            .status(200).send({
               _id: user._id,
               email: user.email,
               name: user.name,
             });
         })
-        .catch(next);
+        .catch((err) => {
+          if (err.statusCode === 400) {
+            next(new DataErr('Переданы некорректные данные'));
+          } else {
+            next(err);
+          }
+        });
     });
 };
 
@@ -124,7 +123,7 @@ const logout = (req, res) => {
     .cookie('jwt', 'jwt.token.revoked', {
       httpOnly: true,
       sameSite: 'none',
-      secure: true,
+      // secure: true,
       maxAge: -1,
     })
     .send({ message: 'Сессия завершена' });
