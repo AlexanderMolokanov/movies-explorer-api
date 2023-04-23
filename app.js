@@ -15,6 +15,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000, NODE_ENV, MONGODB_ADDRESS } = process.env;
 
+app.use(cors({ credentials: true, origin: true }));
 
 app.use('*', cors({
   origin: [

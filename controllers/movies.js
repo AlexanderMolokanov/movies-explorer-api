@@ -10,6 +10,8 @@ const {
   ACCESS_ERROR,
 } = require('../utils/constants');
 
+
+// GET /movies
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
     .then((movies) => res.status(200).send(movies))
