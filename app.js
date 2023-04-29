@@ -17,18 +17,18 @@ const { PORT = 3000, NODE_ENV, MONGODB_ADDRESS } = process.env;
 
 app.use(cors({ credentials: true, origin: true }));
 
-app.use('*', cors({
-  origin: [
-    'localhost:3000',
-    'http://localhost:3000',
-    'http://localhost:3001',
-  ],
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: ['Content-Type', 'Origin', 'Referer', 'Accept', 'Authorization'],
-  credentials: true,
-}));
+// app.use('*', cors({
+//   origin: [
+//     'localhost:3000',
+//     'http://localhost:3000',
+//     'http://localhost:3001',
+//   ],
+//   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+//   preflightContinue: false,
+//   optionsSuccessStatus: 204,
+//   allowedHeaders: ['Content-Type', 'Origin', 'Referer', 'Accept', 'Authorization'],
+//   credentials: true,
+// }));
 
 app.use(bodyParser.json());
 app.use(helmet());
