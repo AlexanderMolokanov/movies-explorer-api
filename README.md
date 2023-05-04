@@ -1,7 +1,6 @@
 # movies-explorer-api
-Backend of the Praktikum by Yandex diploma project.
-
-Domain https://gmkvid.nomoredomains.work/signin
+https://frt.gmkvid.nomoredomains.work/
+https://github.com/AlexanderMolokanov/movies-explorer-api
 
 ## Stack
 * Node.js
