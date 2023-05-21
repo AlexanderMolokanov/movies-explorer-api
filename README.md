@@ -1,19 +1,30 @@
-# movies-explorer-api
-https://frt.gmkvid.nomoredomains.work/
-https://github.com/AlexanderMolokanov/movies-explorer-api
+# Серверная часть для проекта - movies-explorer-api
+[Ссылка на сервер](https://gmkvid.nomoredomains.work/)
+[Ссылка на пулл-реквест](https://...)
+[Ссылка на репозиторий](https://github.com/AlexanderMolokanov/movies-explorer-api)
 
-## Stack
+## Технологии
 * Node.js
 * Express
 * MongoDB
 
-## Available Scripts
+## Технологии
+* Создание нового пользовавателя и редактирование его данных
+* Авторизация
+* Сохранение и удаление фильмов
+* Получение фильмов, сохраненных пользователем
+* Централизованная обработка ошибок
+* Валидация входящих запросов
 
-In the project directory, you can run:
+## Для запуска проекта
+используй следующие команды:
 
 ### `npm install`
 ### `npm run dev`
 ### `npm run start`
 ### `mongod`
 
-Runs the app in the development mode.
+## Для проверки API используй
+шаблонные вопросы из файла request.http
+
+
