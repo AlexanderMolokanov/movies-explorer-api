@@ -124,7 +124,10 @@ const login = (req, res, next) => {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
           // sameSite: NODE_ENV === "production" ? true : "none",
-          // secure: NODE_ENV === "production",
+          // secure: NODE_ENV === "production" ? true : false,
+          // secure: true,
+          sameSite: 'none',
+          domain: NODE_ENV === "production" ? "..." : "localhost",
           })
           .send({ message: "Регистрация выполнена" });
       })
