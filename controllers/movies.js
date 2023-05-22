@@ -17,7 +17,7 @@ const getMovies = (req, res, next) => {
     .then((movies) => res.status(200).send(movies))
     .catch(next);
 };
-
+  
 const addMovie = (req, res, next) => {
   const owner = req.user._id;
 
