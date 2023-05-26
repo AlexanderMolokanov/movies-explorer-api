@@ -126,7 +126,8 @@ const login = (req, res, next) => {
           // sameSite: NODE_ENV === "production" ? true : "none",
           // secure: NODE_ENV === "production" ? true : false,
           // secure: true,
-          sameSite: 'none',
+          // sameSite: 'none',
+          sameSite: true,
           domain: NODE_ENV === "production" ? "..." : "localhost",
           })
           .send({ message: "Регистрация выполнена" });
