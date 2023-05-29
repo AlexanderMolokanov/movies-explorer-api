@@ -119,7 +119,7 @@ const login = (req, res, next) => {
       .then((data) => {
         const token = jwt.sign( { _id: data._id },
           NODE_ENV === "production" ? JWT_SECRET : devJwtKey);
-        res.cookie("jwt", token, {
+          res.cookie("jwt", token, {
           // expires: new Date(Date.now() + 12 * 3600000),
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
